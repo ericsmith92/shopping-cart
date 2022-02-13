@@ -21,7 +21,7 @@ const ItemQuantityToggle: React.FC<ItemProps> = (props) => {
   return (
     <>
       <Box display="flex" alignItems="center" justifyContent="center">
-        <Button variant="contained" onClick={() => removeFromCart(item?.id)}>
+        <Button variant="contained" onClick={() => removeFromCart(item)}>
           {" "}
           -{" "}
         </Button>
@@ -31,7 +31,7 @@ const ItemQuantityToggle: React.FC<ItemProps> = (props) => {
           +{" "}
         </Button>
       </Box>
-      <Box mt={1} display="flex" alignItems="center" justifyContent="center">
+      <Box mt={1} display="flex" justifyContent="center">
         <Typography>
           Total: ${((item?.amount ?? 0) * item?.price).toFixed(2)}
         </Typography>

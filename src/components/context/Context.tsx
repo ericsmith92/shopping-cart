@@ -9,7 +9,7 @@ interface ContextProps {
 interface ContextType {
   state: { products: Product[]; cart: Product[] };
   addToCart: (product: Product) => void;
-  removeFromCart: (id: number) => void;
+  removeFromCart: (item: Product) => void;
 }
 
 export const Cart = React.createContext<ContextType>({
@@ -48,11 +48,22 @@ const Context: React.FC<ContextProps> = (props) => {
     });
   };
 
-  const removeFromCart = (id: number) => {
-    const remainingCartItems = cart.filter((item) => item.id !== id);
+  const removeFromCart = (item: Product) => {
+    if(item.amount && (item.amount - 1) > 0){
+      setCart((prev) => {
+      
+      return prev.map((cartItem) => 
+        cartItem.id === item.id && item.amount
+          ? { ...item, amount: item.amount -= 1}
+          : item
+      );
+    });
+    }else{
+      const remainingCartItems = cart.filter((cartItem) => cartItem.id !== item.id);
 
-    setCart([...remainingCartItems]);
-  };
+      setCart([...remainingCartItems]);
+    }
+  }
 
   console.log({ cart });
 
