@@ -10,12 +10,14 @@ interface ContextType {
   state: { products: Product[]; cart: Product[] };
   addToCart: (product: Product) => void;
   removeFromCart: (item: Product) => void;
+  totalItems: number
 }
 
 export const Cart = React.createContext<ContextType>({
   state: { products: [], cart: [] },
   addToCart: () => {},
   removeFromCart: () => {},
+  totalItems: 0
 });
 
 const Context: React.FC<ContextProps> = (props) => {
@@ -65,7 +67,10 @@ const Context: React.FC<ContextProps> = (props) => {
     }
   }
 
-  console.log({ cart });
+  const totalItems = cart.reduce<number>((acc, currentValue) => {
+      acc += currentValue.amount ?? 0;
+      return acc;
+    }, 0);
 
   return (
     <Cart.Provider
@@ -73,6 +78,7 @@ const Context: React.FC<ContextProps> = (props) => {
         state: { products: products, cart: cart },
         addToCart,
         removeFromCart,
+        totalItems
       }}
     >
       {children}

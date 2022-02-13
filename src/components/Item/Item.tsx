@@ -13,6 +13,7 @@ import styled from "@emotion/styled"
 
 interface ItemProps {
   item: Product;
+  isNestedInCart?: boolean
 }
 
 const StyledCartItem = styled(Card)`
@@ -28,7 +29,7 @@ const StyledCartItem = styled(Card)`
 `
 
 const Item: React.FC<ItemProps> = (props) => {
-  const { item } = props;
+  const { item, isNestedInCart = false } = props;
 
   const {
     addToCart,
@@ -41,7 +42,7 @@ const Item: React.FC<ItemProps> = (props) => {
 
   return (
     <StyledCartItem sx={{ minWidth: 275 }}>
-      {isItemInCart && <ItemBadge amount={cartItem?.amount ?? 0} />}
+      {isItemInCart &&  !isNestedInCart && <ItemBadge />}
       <CardMedia
         component="img"
         height="194"

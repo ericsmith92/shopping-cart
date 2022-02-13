@@ -5,13 +5,28 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useCartContext } from "./components/context/Context";
 import Item from "./components/Item/Item";
+import Header from "./components/Header/Header"
+import Cart from "./components/Cart/Cart"
 
 export default function App() {
   const {
     state: { products },
   } = useCartContext();
 
+  const [cartOpen, setCartOpen] = React.useState(false)
+
+  const handleCartOpen = () => {
+      setCartOpen(true)
+  }
+
+  const handleCartClose = () => {
+      setCartOpen(false)
+  }
+
   return (
+    <>
+    <Header openCart={handleCartOpen}/>
+    <Cart open={cartOpen} closeCart={handleCartClose}/>
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
@@ -26,5 +41,6 @@ export default function App() {
         </Grid>
       </Box>
     </Container>
+    </>
   );
 }
