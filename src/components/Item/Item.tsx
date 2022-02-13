@@ -11,6 +11,7 @@ import ItemQuantityToggle from "./ItemQuantityToggle";
 import ItemBadge from "./ItemBadge";
 import styled from "@emotion/styled"
 import {clipTitle} from "../../utils/clipTitle"
+import Rating from "../Rating/Rating"
 
 interface ItemProps {
   item: Product;
@@ -35,11 +36,14 @@ const Item: React.FC<ItemProps> = (props) => {
   const {
     addToCart,
     state: { cart },
+    productRatings,
   } = useCartContext();
 
   const cartItem = cart?.find((product) => product.id === item.id);
 
   const isItemInCart = !!cartItem;
+
+  console.log(productRatings)
 
   return (
     <StyledCartItem sx={{ minWidth: 275 }}>
@@ -58,6 +62,7 @@ const Item: React.FC<ItemProps> = (props) => {
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             ${item?.price.toFixed(2)}
           </Typography>
+          <Rating initalRating={productRatings[item?.id]} itemId={item?.id}/>
         </Box>
         {!isItemInCart ? (
           <Button fullWidth variant="contained" onClick={() => addToCart(item)}>

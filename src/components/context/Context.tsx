@@ -10,22 +10,27 @@ interface ContextType {
   state: { products: Product[]; cart: Product[] };
   addToCart: (product: Product) => void;
   removeFromCart: (item: Product) => void;
+  updateRating: (id: number, rating: number) => void
   totalItems: number;
   grandTotal: number;
+  productRatings: Record<number, number>
 }
 
 export const Cart = React.createContext<ContextType>({
   state: { products: [], cart: [] },
   addToCart: () => {},
   removeFromCart: () => {},
+  updateRating: () => {},
   totalItems: 0,
-  grandTotal: 0
+  grandTotal: 0,
+  productRatings: {}
 });
 
 const Context: React.FC<ContextProps> = (props) => {
   const { children } = props;
   const [products, setProducts] = React.useState<Product[]>([]);
   const [cart, setCart] = React.useState<Product[]>([]);
+  const [ratings, setRatings] = React.useState<Record<number, number>>({})
 
   React.useEffect(() => {
     const fetchProducts = async () => {
@@ -35,6 +40,15 @@ const Context: React.FC<ContextProps> = (props) => {
 
     fetchProducts();
   }, []);
+
+   React.useEffect(() => {
+    const initialRatings = products.reduce<Record<number, number>>((acc, currentValue) => {
+      acc[currentValue.id] = 0
+      return acc
+    }, {})
+
+   setRatings(initialRatings)
+  }, [products]);
 
   const addToCart = (product: Product) => {
     setCart((prev) => {
@@ -73,6 +87,16 @@ const Context: React.FC<ContextProps> = (props) => {
     }
   }
 
+  const updateRating = (id: number, rating: number) => {
+    const updatedRating = { [id]: rating}
+
+    console.log(updatedRating)
+    setRatings((prev) => ({
+      ...prev,
+      ...updatedRating
+    }))
+  }
+
   const totals = cart.reduce<Totals>((acc, currentValue) => {
       const currentAmount = currentValue.amount ?? 0
       acc.totalItems += currentAmount;
@@ -88,8 +112,10 @@ const Context: React.FC<ContextProps> = (props) => {
         state: { products: products, cart: cart },
         addToCart,
         removeFromCart,
+        updateRating,
         totalItems,
-        grandTotal
+        grandTotal,
+        productRatings: ratings
       }}
     >
       {children}
