@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Product } from "../../types";
+import { Product, Totals  } from "../../types";
 import { getProducts } from "../../utils/getProducts";
 
 interface ContextProps {
@@ -10,12 +10,16 @@ interface ContextType {
   state: { products: Product[]; cart: Product[] };
   addToCart: (product: Product) => void;
   removeFromCart: (item: Product) => void;
+  totalItems: number;
+  grandTotal: number;
 }
 
 export const Cart = React.createContext<ContextType>({
   state: { products: [], cart: [] },
   addToCart: () => {},
   removeFromCart: () => {},
+  totalItems: 0,
+  grandTotal: 0
 });
 
 const Context: React.FC<ContextProps> = (props) => {
@@ -51,12 +55,16 @@ const Context: React.FC<ContextProps> = (props) => {
   const removeFromCart = (item: Product) => {
     if(item.amount && (item.amount - 1) > 0){
       setCart((prev) => {
+
+      const updatedCartItems = prev.map((cartItem) => {
+        if(cartItem.id === item.id && cartItem.amount){
+          return { ...cartItem, amount: cartItem.amount -= 1}
+        }else{
+          return cartItem
+        }
+      })
       
-      return prev.map((cartItem) => 
-        cartItem.id === item.id && item.amount
-          ? { ...item, amount: item.amount -= 1}
-          : item
-      );
+      return updatedCartItems
     });
     }else{
       const remainingCartItems = cart.filter((cartItem) => cartItem.id !== item.id);
@@ -65,7 +73,14 @@ const Context: React.FC<ContextProps> = (props) => {
     }
   }
 
-  console.log({ cart });
+  const totals = cart.reduce<Totals>((acc, currentValue) => {
+      const currentAmount = currentValue.amount ?? 0
+      acc.totalItems += currentAmount;
+      acc.grandTotal += currentAmount * currentValue.price
+      return acc;
+  }, {totalItems: 0, grandTotal: 0})
+
+  const { totalItems, grandTotal } = totals
 
   return (
     <Cart.Provider
@@ -73,6 +88,8 @@ const Context: React.FC<ContextProps> = (props) => {
         state: { products: products, cart: cart },
         addToCart,
         removeFromCart,
+        totalItems,
+        grandTotal
       }}
     >
       {children}

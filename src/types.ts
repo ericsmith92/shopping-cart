@@ -11,3 +11,8 @@ export type Product = {
   };
   amount?: number;
 };
+
+export type Totals = {
+  totalItems: number;
+  grandTotal: number;
+}

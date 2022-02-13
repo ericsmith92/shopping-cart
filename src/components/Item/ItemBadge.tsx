@@ -12,11 +12,10 @@ const StyledBox = styled(Box)`
 `
 
 interface ItemBadgeProps {
-  amount: number
 }
 
 const ItemBadge: React.FC<ItemBadgeProps> = (props) => {
-  const { amount } = props
+
   return(
     <StyledBox className="badge">
       In Cart
