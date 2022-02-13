@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Product } from "../../types";
+import { Product, Totals  } from "../../types";
 import { getProducts } from "../../utils/getProducts";
 
 interface ContextProps {
@@ -10,14 +10,16 @@ interface ContextType {
   state: { products: Product[]; cart: Product[] };
   addToCart: (product: Product) => void;
   removeFromCart: (item: Product) => void;
-  totalItems: number
+  totalItems: number;
+  grandTotal: number;
 }
 
 export const Cart = React.createContext<ContextType>({
   state: { products: [], cart: [] },
   addToCart: () => {},
   removeFromCart: () => {},
-  totalItems: 0
+  totalItems: 0,
+  grandTotal: 0
 });
 
 const Context: React.FC<ContextProps> = (props) => {
@@ -71,12 +73,14 @@ const Context: React.FC<ContextProps> = (props) => {
     }
   }
 
-  const totalItems = cart.reduce<number>((acc, currentValue) => {
-      acc += currentValue.amount ?? 0;
+  const totals = cart.reduce<Totals>((acc, currentValue) => {
+      const currentAmount = currentValue.amount ?? 0
+      acc.totalItems += currentAmount;
+      acc.grandTotal += currentAmount * currentValue.price
       return acc;
-    }, 0);
+  }, {totalItems: 0, grandTotal: 0})
 
-    console.log({cart})
+  const { totalItems, grandTotal } = totals
 
   return (
     <Cart.Provider
@@ -84,7 +88,8 @@ const Context: React.FC<ContextProps> = (props) => {
         state: { products: products, cart: cart },
         addToCart,
         removeFromCart,
-        totalItems
+        totalItems,
+        grandTotal
       }}
     >
       {children}

@@ -15,6 +15,7 @@ const Cart: React.FC<CartProps> = (props) => {
 
   const {
     state: { cart },
+    grandTotal
   } = useCartContext();
 
   const hasCartItems = !!cart?.length
@@ -23,8 +24,13 @@ const Cart: React.FC<CartProps> = (props) => {
     <Drawer anchor="right" open={open} onClose={() => closeCart()}>
     <Box p={2}>
       { hasCartItems 
-      ?  
-      cart.map((item, idx) => <Item key={`${item.id}_${idx}`} item={item} isNestedInCart/>)
+      ?
+      <>  
+      {cart.map((item, idx) => <Item key={`${item.id}_${idx}`} item={item} isNestedInCart/>)}
+      <Box mt={3} display="flex" justifyContent="center">
+        <Typography>Grand Total: ${grandTotal.toFixed(2)}</Typography>
+      </Box>
+      </>
       : 
       <Typography>No Items in Cart</Typography>}
       </Box>
