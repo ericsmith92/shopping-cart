@@ -8,10 +8,24 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useCartContext } from "../context/Context";
 import ItemQuantityToggle from "./ItemQuantityToggle";
+import ItemBadge from "./ItemBadge";
+import styled from "@emotion/styled"
 
 interface ItemProps {
   item: Product;
 }
+
+const StyledCart = styled(Card)`
+  position: relative;
+  overflow: visible;
+
+  & .badge{
+      position: absolute;
+      top: -20px;
+      left: -15px;
+      z-index: 1;
+  }
+`
 
 const Item: React.FC<ItemProps> = (props) => {
   const { item } = props;
@@ -26,7 +40,8 @@ const Item: React.FC<ItemProps> = (props) => {
   const isItemInCart = !!cartItem;
 
   return (
-    <Card sx={{ minWidth: 275 }}>
+    <StyledCart sx={{ minWidth: 275 }}>
+      {isItemInCart && <ItemBadge amount={cartItem?.amount ?? 0} />}
       <CardMedia
         component="img"
         height="194"
@@ -50,7 +65,7 @@ const Item: React.FC<ItemProps> = (props) => {
           <ItemQuantityToggle item={cartItem} />
         )}
       </CardContent>
-    </Card>
+    </StyledCart>
   );
 };
 
