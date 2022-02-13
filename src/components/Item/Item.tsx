@@ -15,7 +15,7 @@ interface ItemProps {
   item: Product;
 }
 
-const StyledCart = styled(Card)`
+const StyledCartItem = styled(Card)`
   position: relative;
   overflow: visible;
 
@@ -40,7 +40,7 @@ const Item: React.FC<ItemProps> = (props) => {
   const isItemInCart = !!cartItem;
 
   return (
-    <StyledCart sx={{ minWidth: 275 }}>
+    <StyledCartItem sx={{ minWidth: 275 }}>
       {isItemInCart && <ItemBadge amount={cartItem?.amount ?? 0} />}
       <CardMedia
         component="img"
@@ -65,7 +65,7 @@ const Item: React.FC<ItemProps> = (props) => {
           <ItemQuantityToggle item={cartItem} />
         )}
       </CardContent>
-    </StyledCart>
+    </StyledCartItem>
   );
 };
 
