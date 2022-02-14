@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Product, Totals  } from "../../types";
+import { Product, Totals } from "../../types";
 import { getProducts } from "../../utils/getProducts";
 
 interface ContextProps {
@@ -10,11 +10,11 @@ interface ContextType {
   state: { products: Product[]; cart: Product[] };
   addToCart: (product: Product) => void;
   removeFromCart: (item: Product) => void;
-  updateRating: (id: number, rating: number) => void
+  updateRating: (id: number, rating: number) => void;
   totalItems: number;
   grandTotal: number;
   productRatings: Record<number, number>;
-  loading: boolean
+  loading: boolean;
 }
 
 export const Cart = React.createContext<ContextType>({
@@ -32,27 +32,30 @@ const Context: React.FC<ContextProps> = (props) => {
   const { children } = props;
   const [products, setProducts] = React.useState<Product[]>([]);
   const [cart, setCart] = React.useState<Product[]>([]);
-  const [ratings, setRatings] = React.useState<Record<number, number>>({})
-  const [loading, setLoading] = React.useState(false)
+  const [ratings, setRatings] = React.useState<Record<number, number>>({});
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     const fetchProducts = async () => {
       const fetchedProducts = await getProducts();
       setProducts(fetchedProducts);
-      setLoading(false)
+      setLoading(false);
     };
 
     fetchProducts();
   }, []);
 
-   React.useEffect(() => {
-    const initialRatings = products.reduce<Record<number, number>>((acc, currentValue) => {
-      acc[currentValue.id] = 0
-      return acc
-    }, {})
+  React.useEffect(() => {
+    const initialRatings = products.reduce<Record<number, number>>(
+      (acc, currentValue) => {
+        acc[currentValue.id] = 0;
+        return acc;
+      },
+      {}
+    );
 
-   setRatings(initialRatings)
+    setRatings(initialRatings);
   }, [products]);
 
   const addToCart = (product: Product) => {
@@ -72,44 +75,48 @@ const Context: React.FC<ContextProps> = (props) => {
   };
 
   const removeFromCart = (item: Product) => {
-    if(item.amount && (item.amount - 1) > 0){
+    if (item.amount && item.amount - 1 > 0) {
       setCart((prev) => {
+        const updatedCartItems = prev.map((cartItem) => {
+          if (cartItem.id === item.id && cartItem.amount) {
+            return { ...cartItem, amount: (cartItem.amount -= 1) };
+          } else {
+            return cartItem;
+          }
+        });
 
-      const updatedCartItems = prev.map((cartItem) => {
-        if(cartItem.id === item.id && cartItem.amount){
-          return { ...cartItem, amount: cartItem.amount -= 1}
-        }else{
-          return cartItem
-        }
-      })
-      
-      return updatedCartItems
-    });
-    }else{
-      const remainingCartItems = cart.filter((cartItem) => cartItem.id !== item.id);
+        return updatedCartItems;
+      });
+    } else {
+      const remainingCartItems = cart.filter(
+        (cartItem) => cartItem.id !== item.id
+      );
 
       setCart([...remainingCartItems]);
     }
-  }
+  };
 
   const updateRating = (id: number, rating: number) => {
-    const updatedRating = { [id]: rating}
+    const updatedRating = { [id]: rating };
 
-    console.log(updatedRating)
+    console.log(updatedRating);
     setRatings((prev) => ({
       ...prev,
-      ...updatedRating
-    }))
-  }
+      ...updatedRating,
+    }));
+  };
 
-  const totals = cart.reduce<Totals>((acc, currentValue) => {
-      const currentAmount = currentValue.amount ?? 0
+  const totals = cart.reduce<Totals>(
+    (acc, currentValue) => {
+      const currentAmount = currentValue.amount ?? 0;
       acc.totalItems += currentAmount;
-      acc.grandTotal += currentAmount * currentValue.price
+      acc.grandTotal += currentAmount * currentValue.price;
       return acc;
-  }, {totalItems: 0, grandTotal: 0})
+    },
+    { totalItems: 0, grandTotal: 0 }
+  );
 
-  const { totalItems, grandTotal } = totals
+  const { totalItems, grandTotal } = totals;
 
   return (
     <Cart.Provider
@@ -121,7 +128,7 @@ const Context: React.FC<ContextProps> = (props) => {
         totalItems,
         grandTotal,
         productRatings: ratings,
-        loading
+        loading,
       }}
     >
       {children}
