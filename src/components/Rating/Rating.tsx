@@ -2,6 +2,7 @@ import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import IconButton from "@mui/material/IconButton";
 import * as React from "react";
+import { HIGHEST_RATING } from "../../constants";
 import { useCartContext } from "../context/Context";
 
 interface RatingProps {
@@ -12,7 +13,7 @@ interface RatingProps {
 const Rating: React.FC<RatingProps> = (props) => {
   const { initialRating, itemId } = props;
 
-  const stars = Array.from({ length: 5 });
+  const stars = Array.from({ length: HIGHEST_RATING });
 
   const { updateRating } = useCartContext();
 
