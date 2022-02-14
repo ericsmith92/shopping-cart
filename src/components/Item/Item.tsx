@@ -1,34 +1,34 @@
-import * as React from "react";
-import { Product } from "../../types";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import CardMedia from "@mui/material/CardMedia";
+import styled from "@emotion/styled";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { Product } from "../../types";
+import { clipTitle } from "../../utils/clipTitle";
 import { useCartContext } from "../context/Context";
-import ItemQuantityToggle from "./ItemQuantityToggle";
+import Rating from "../Rating/Rating";
 import ItemBadge from "./ItemBadge";
-import styled from "@emotion/styled"
-import {clipTitle} from "../../utils/clipTitle"
-import Rating from "../Rating/Rating"
+import ItemQuantityToggle from "./ItemQuantityToggle";
 
 interface ItemProps {
   item: Product;
-  isNestedInCart?: boolean
+  isNestedInCart?: boolean;
 }
 
 const StyledCartItem = styled(Card)`
   position: relative;
   overflow: visible;
 
-  & .badge{
-      position: absolute;
-      top: -20px;
-      left: -15px;
-      z-index: 1;
+  & .badge {
+    position: absolute;
+    top: -20px;
+    left: -15px;
+    z-index: 1;
   }
-`
+`;
 
 const Item: React.FC<ItemProps> = (props) => {
   const { item, isNestedInCart = false } = props;
@@ -43,11 +43,9 @@ const Item: React.FC<ItemProps> = (props) => {
 
   const isItemInCart = !!cartItem;
 
-  console.log(productRatings)
-
   return (
     <StyledCartItem sx={{ minWidth: 275 }}>
-      {isItemInCart &&  !isNestedInCart && <ItemBadge />}
+      {isItemInCart && !isNestedInCart && <ItemBadge />}
       <CardMedia
         component="img"
         height="194"
@@ -62,7 +60,7 @@ const Item: React.FC<ItemProps> = (props) => {
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             ${item?.price.toFixed(2)}
           </Typography>
-          <Rating initalRating={productRatings[item?.id]} itemId={item?.id}/>
+          <Rating initialRating={productRatings[item?.id]} itemId={item?.id} />
         </Box>
         {!isItemInCart ? (
           <Button fullWidth variant="contained" onClick={() => addToCart(item)}>

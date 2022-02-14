@@ -1,26 +1,23 @@
-import * as React from "react"
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Badge from '@mui/material/Badge';
-import { useCartContext } from "../context/Context"
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AppBar from "@mui/material/AppBar";
+import Badge from "@mui/material/Badge";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { useCartContext } from "../context/Context";
 
 interface HeaderProps {
-  openCart: () => void
+  openCart: () => void;
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
-  const { openCart } = props
+  const { openCart } = props;
 
-  const {
-    totalItems
-  } = useCartContext();
+  const { totalItems } = useCartContext();
 
-return (
+  return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
@@ -43,6 +40,6 @@ return (
       </AppBar>
     </Box>
   );
-}
+};
 
-export default Header
+export default Header;
