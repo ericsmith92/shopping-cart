@@ -13,7 +13,8 @@ interface ContextType {
   updateRating: (id: number, rating: number) => void
   totalItems: number;
   grandTotal: number;
-  productRatings: Record<number, number>
+  productRatings: Record<number, number>;
+  loading: boolean
 }
 
 export const Cart = React.createContext<ContextType>({
@@ -23,7 +24,8 @@ export const Cart = React.createContext<ContextType>({
   updateRating: () => {},
   totalItems: 0,
   grandTotal: 0,
-  productRatings: {}
+  productRatings: {},
+  loading: false,
 });
 
 const Context: React.FC<ContextProps> = (props) => {
@@ -31,11 +33,14 @@ const Context: React.FC<ContextProps> = (props) => {
   const [products, setProducts] = React.useState<Product[]>([]);
   const [cart, setCart] = React.useState<Product[]>([]);
   const [ratings, setRatings] = React.useState<Record<number, number>>({})
+  const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
+    setLoading(true)
     const fetchProducts = async () => {
       const fetchedProducts = await getProducts();
       setProducts(fetchedProducts);
+      setLoading(false)
     };
 
     fetchProducts();
@@ -115,7 +120,8 @@ const Context: React.FC<ContextProps> = (props) => {
         updateRating,
         totalItems,
         grandTotal,
-        productRatings: ratings
+        productRatings: ratings,
+        loading
       }}
     >
       {children}

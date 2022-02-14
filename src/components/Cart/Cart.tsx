@@ -23,10 +23,13 @@ const Cart: React.FC<CartProps> = (props) => {
   return(
     <Drawer anchor="right" open={open} onClose={() => closeCart()}>
     <Box p={2}>
+        <Typography variant="h4" component="h1" align="center" gutterBottom>
+          Cart
+        </Typography>
       { hasCartItems 
       ?
       <>  
-      {cart.map((item, idx) => <Item key={`${item.id}_${idx}`} item={item} isNestedInCart/>)}
+      {cart.map((item, idx) => <Box key={`${item.id}_${idx}`} mb={2}><Item  item={item} isNestedInCart/></Box>)}
       <Box mt={3} display="flex" justifyContent="center">
         <Typography>Grand Total: ${grandTotal.toFixed(2)}</Typography>
       </Box>

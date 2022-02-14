@@ -43,8 +43,6 @@ const Item: React.FC<ItemProps> = (props) => {
 
   const isItemInCart = !!cartItem;
 
-  console.log(productRatings)
-
   return (
     <StyledCartItem sx={{ minWidth: 275 }}>
       {isItemInCart &&  !isNestedInCart && <ItemBadge />}

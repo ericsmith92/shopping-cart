@@ -7,10 +7,12 @@ import { useCartContext } from "./components/context/Context";
 import Item from "./components/Item/Item";
 import Header from "./components/Header/Header"
 import Cart from "./components/Cart/Cart"
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function App() {
   const {
     state: { products },
+    loading
   } = useCartContext();
 
   const [cartOpen, setCartOpen] = React.useState(false)
@@ -26,11 +28,15 @@ export default function App() {
   return (
     <>
     <Header openCart={handleCartOpen}/>
-    <Cart open={cartOpen} closeCart={handleCartClose}/>
+    {loading 
+    ? 
+    (<Box display="flex" width="100%" minHeight="100vh" justifyContent="center" alignItems="center">
+    <CircularProgress />
+    </Box>): (<><Cart open={cartOpen} closeCart={handleCartClose}/>
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Home
+          Products
         </Typography>
         <Grid container spacing={2}>
           {products?.map((product) => (
@@ -40,7 +46,7 @@ export default function App() {
           ))}
         </Grid>
       </Box>
-    </Container>
+    </Container></>)}
     </>
   );
 }
