@@ -1,6 +1,6 @@
 # Shopping Cart
 
-An application using React that will display a list of items that you can add to your cart, remove items from your cart, and assign products and rating from 1 - 5.
+An application using React that will display a list of items that you can add to your cart, remove items from your cart, and assign products a rating from 1 - 5.
 ## Installation
 
 Clone the repo and install the dependencies
