@@ -11,7 +11,7 @@ cd shopping-cart && yarn install
 ## Running the Application
 
 ```bash
-cd shopping-cart && yarn start
+yarn start
 ```
 ## Notes
 - Client at: http://localhost:3000
