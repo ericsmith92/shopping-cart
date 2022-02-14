@@ -20,9 +20,11 @@ const Cart: React.FC<CartProps> = (props) => {
 
   const hasCartItems = !!cart?.length;
 
+  const cartRef = React.useRef<HTMLDivElement>(null);
+
   return (
     <Drawer anchor="right" open={open} onClose={() => closeCart()}>
-      <Box p={2}>
+      <Box p={2} ref={cartRef} minWidth={`${cartRef?.current?.offsetWidth}px`}>
         <Typography variant="h4" component="h1" align="center" gutterBottom>
           Cart
         </Typography>
@@ -38,7 +40,7 @@ const Cart: React.FC<CartProps> = (props) => {
             </Box>
           </>
         ) : (
-          <Typography>No Items in Cart</Typography>
+          <Typography align="center">No Items in Cart</Typography>
         )}
       </Box>
     </Drawer>

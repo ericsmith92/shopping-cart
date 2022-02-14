@@ -74,11 +74,11 @@ const Context: React.FC<ContextProps> = (props) => {
     });
   };
 
-  const removeFromCart = (item: Product) => {
-    if (item.amount && item.amount - 1 > 0) {
+  const removeFromCart = (product: Product) => {
+    if (product.amount && product.amount - 1 > 0) {
       setCart((prev) => {
         const updatedCartItems = prev.map((cartItem) => {
-          if (cartItem.id === item.id && cartItem.amount) {
+          if (cartItem.id === product.id && cartItem.amount) {
             return { ...cartItem, amount: (cartItem.amount -= 1) };
           } else {
             return cartItem;
@@ -89,7 +89,7 @@ const Context: React.FC<ContextProps> = (props) => {
       });
     } else {
       const remainingCartItems = cart.filter(
-        (cartItem) => cartItem.id !== item.id
+        (cartItem) => cartItem.id !== product.id
       );
 
       setCart([...remainingCartItems]);
@@ -99,7 +99,6 @@ const Context: React.FC<ContextProps> = (props) => {
   const updateRating = (id: number, rating: number) => {
     const updatedRating = { [id]: rating };
 
-    console.log(updatedRating);
     setRatings((prev) => ({
       ...prev,
       ...updatedRating,
