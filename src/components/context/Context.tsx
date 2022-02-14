@@ -99,7 +99,6 @@ const Context: React.FC<ContextProps> = (props) => {
   const updateRating = (id: number, rating: number) => {
     const updatedRating = { [id]: rating };
 
-    console.log(updatedRating);
     setRatings((prev) => ({
       ...prev,
       ...updatedRating,
