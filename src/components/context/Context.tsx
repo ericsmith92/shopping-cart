@@ -68,19 +68,38 @@ const Context: React.FC<ContextProps> = (props) => {
   }, [products]);
 
   const addToCart = (product: Product) => {
-    setCart((prev) => {
-      const isItemInCart = prev.find((item) => item.id === product.id);
+    if (product.rating.count - 1 >= 0) {
+      setCart((prev) => {
+        const isItemInCart = prev.find((item) => item.id === product.id);
 
-      if (isItemInCart) {
-        return prev.map((item) =>
-          item.id === product.id && item.amount
-            ? { ...item, amount: (item.amount += 1) }
-            : item
-        );
-      }
+        if (isItemInCart) {
+          return prev.map((item) =>
+            item.id === product.id && item.amount
+              ? {
+                  ...item,
+                  amount: (item.amount += 1),
+                  rating: {
+                    rate: item.rating.rate,
+                    count: (item.rating.count -= 1),
+                  },
+                }
+              : item
+          );
+        }
 
-      return [...prev, { ...product, amount: 1 }];
-    });
+        return [
+          ...prev,
+          {
+            ...product,
+            amount: 1,
+            rating: {
+              rate: product.rating.rate,
+              count: (product.rating.count -= 1),
+            },
+          },
+        ];
+      });
+    }
   };
 
   const removeFromCart = (product: Product) => {
@@ -88,7 +107,14 @@ const Context: React.FC<ContextProps> = (props) => {
       setCart((prev) => {
         const updatedCartItems = prev.map((cartItem) => {
           if (cartItem.id === product.id && cartItem.amount) {
-            return { ...cartItem, amount: (cartItem.amount -= 1) };
+            return {
+              ...cartItem,
+              amount: (cartItem.amount -= 1),
+              rating: {
+                rate: product.rating.rate,
+                count: (product.rating.count += 1),
+              },
+            };
           } else {
             return cartItem;
           }
