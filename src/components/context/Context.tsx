@@ -37,13 +37,18 @@ const Context: React.FC<ContextProps> = (props) => {
 
   React.useEffect(() => {
     setLoading(true);
-    const fetchProducts = async () => {
-      const fetchedProducts = await getProducts();
-      setProducts(fetchedProducts);
-      setLoading(false);
-    };
 
-    fetchProducts();
+    try {
+      const fetchProducts = async () => {
+        const fetchedProducts = await getProducts();
+        setProducts(fetchedProducts);
+        setLoading(false);
+      };
+
+      fetchProducts();
+    } catch (e) {
+      console.log(`Error: ${e}`);
+    }
   }, []);
 
   React.useEffect(() => {
