@@ -8,11 +8,13 @@ import Cart from "./components/Cart/Cart";
 import { useCartContext } from "./components/context/Context";
 import Header from "./components/Header/Header";
 import Item from "./components/Item/Item";
+import Error from "./components/Error";
 
 export default function App() {
   const {
     state: { products },
     loading,
+    error,
   } = useCartContext();
 
   const [cartOpen, setCartOpen] = React.useState(false);
@@ -43,16 +45,22 @@ export default function App() {
           <Cart open={cartOpen} closeCart={handleCartClose} />
           <Container maxWidth="lg">
             <Box sx={{ my: 4 }}>
-              <Typography variant="h4" component="h1" gutterBottom>
-                Products
-              </Typography>
-              <Grid container spacing={2}>
-                {products?.map((product) => (
-                  <Grid key={product?.id} item xs={12} md={4}>
-                    <Item item={product} />
+              {error ? (
+                <Error message={error} />
+              ) : (
+                <>
+                  <Typography variant="h4" component="h1" gutterBottom>
+                    Products
+                  </Typography>
+                  <Grid container spacing={2}>
+                    {products?.map((product) => (
+                      <Grid key={product?.id} item xs={12} md={4}>
+                        <Item item={product} />
+                      </Grid>
+                    ))}
                   </Grid>
-                ))}
-              </Grid>
+                </>
+              )}
             </Box>
           </Container>
         </>

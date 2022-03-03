@@ -15,6 +15,7 @@ interface ContextType {
   grandTotal: number;
   productRatings: Record<number, number>;
   loading: boolean;
+  error?: string;
 }
 
 export const Cart = React.createContext<ContextType>({
@@ -26,6 +27,7 @@ export const Cart = React.createContext<ContextType>({
   grandTotal: 0,
   productRatings: {},
   loading: false,
+  error: ``,
 });
 
 const Context: React.FC<ContextProps> = (props) => {
@@ -34,13 +36,20 @@ const Context: React.FC<ContextProps> = (props) => {
   const [cart, setCart] = React.useState<Product[]>([]);
   const [ratings, setRatings] = React.useState<Record<number, number>>({});
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(``);
 
   React.useEffect(() => {
     setLoading(true);
+
     const fetchProducts = async () => {
-      const fetchedProducts = await getProducts();
-      setProducts(fetchedProducts);
-      setLoading(false);
+      try {
+        const fetchedProducts = await getProducts();
+        setProducts(fetchedProducts);
+      } catch (e) {
+        setError(`Error getting products, please refresh and try again.`);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchProducts();
@@ -128,6 +137,7 @@ const Context: React.FC<ContextProps> = (props) => {
         grandTotal,
         productRatings: ratings,
         loading,
+        error,
       }}
     >
       {children}
