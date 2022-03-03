@@ -14,7 +14,6 @@ interface ContextType {
   totalItems: number;
   grandTotal: number;
   productRatings: Record<number, number>;
-  outOfStockItems: Record<number, boolean>;
   loading: boolean;
   error?: string;
 }
@@ -27,7 +26,6 @@ export const Cart = React.createContext<ContextType>({
   totalItems: 0,
   grandTotal: 0,
   productRatings: {},
-  outOfStockItems: {},
   loading: false,
   error: ``,
 });
@@ -37,9 +35,6 @@ const Context: React.FC<ContextProps> = (props) => {
   const [products, setProducts] = React.useState<Product[]>([]);
   const [cart, setCart] = React.useState<Product[]>([]);
   const [ratings, setRatings] = React.useState<Record<number, number>>({});
-  const [outOfStockItems, setOutOfStockItems] = React.useState<
-    Record<number, boolean>
-  >({});
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(``);
 
@@ -104,26 +99,11 @@ const Context: React.FC<ContextProps> = (props) => {
           },
         ];
       });
-    } else {
-      const newlyOutOfStock = { [product.id]: true };
-      setOutOfStockItems((prev) => ({
-        ...prev,
-        ...newlyOutOfStock,
-      }));
     }
   };
 
   const removeFromCart = (product: Product) => {
     if (product.amount && product.amount - 1 > 0) {
-      if (outOfStockItems.hasOwnProperty(product.id)) {
-        const newlyInStock = { [product.id]: false };
-
-        setOutOfStockItems((prev) => ({
-          ...prev,
-          ...newlyInStock,
-        }));
-      }
-
       setCart((prev) => {
         const updatedCartItems = prev.map((cartItem) => {
           if (cartItem.id === product.id && cartItem.amount) {
@@ -172,8 +152,6 @@ const Context: React.FC<ContextProps> = (props) => {
 
   const { totalItems, grandTotal } = totals;
 
-  console.log({ cart });
-
   return (
     <Cart.Provider
       value={{
@@ -184,7 +162,6 @@ const Context: React.FC<ContextProps> = (props) => {
         totalItems,
         grandTotal,
         productRatings: ratings,
-        outOfStockItems,
         loading,
         error,
       }}

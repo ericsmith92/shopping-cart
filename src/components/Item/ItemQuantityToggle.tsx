@@ -12,12 +12,7 @@ export interface ItemProps {
 const ItemQuantityToggle: React.FC<ItemProps> = (props) => {
   const { item } = props;
 
-  const {
-    addToCart,
-    removeFromCart,
-    state: { cart },
-    outOfStockItems,
-  } = useCartContext();
+  const { addToCart, removeFromCart } = useCartContext();
 
   const itemIsOutOfStock = !item.rating.count;
 
