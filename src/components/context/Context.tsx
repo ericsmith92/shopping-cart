@@ -14,6 +14,7 @@ interface ContextType {
   totalItems: number;
   grandTotal: number;
   productRatings: Record<number, number>;
+  outOfStockItems: Record<number, boolean>;
   loading: boolean;
   error?: string;
 }
@@ -26,6 +27,7 @@ export const Cart = React.createContext<ContextType>({
   totalItems: 0,
   grandTotal: 0,
   productRatings: {},
+  outOfStockItems: {},
   loading: false,
   error: ``,
 });
@@ -35,6 +37,9 @@ const Context: React.FC<ContextProps> = (props) => {
   const [products, setProducts] = React.useState<Product[]>([]);
   const [cart, setCart] = React.useState<Product[]>([]);
   const [ratings, setRatings] = React.useState<Record<number, number>>({});
+  const [outOfStockItems, setOutOfStockItems] = React.useState<
+    Record<number, boolean>
+  >({});
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(``);
 
@@ -68,27 +73,68 @@ const Context: React.FC<ContextProps> = (props) => {
   }, [products]);
 
   const addToCart = (product: Product) => {
-    setCart((prev) => {
-      const isItemInCart = prev.find((item) => item.id === product.id);
+    if (product.rating.count - 1 >= 0) {
+      setCart((prev) => {
+        const isItemInCart = prev.find((item) => item.id === product.id);
 
-      if (isItemInCart) {
-        return prev.map((item) =>
-          item.id === product.id && item.amount
-            ? { ...item, amount: (item.amount += 1) }
-            : item
-        );
-      }
+        if (isItemInCart) {
+          return prev.map((item) =>
+            item.id === product.id && item.amount
+              ? {
+                  ...item,
+                  amount: (item.amount += 1),
+                  rating: {
+                    rate: item.rating.rate,
+                    count: (item.rating.count -= 1),
+                  },
+                }
+              : item
+          );
+        }
 
-      return [...prev, { ...product, amount: 1 }];
-    });
+        return [
+          ...prev,
+          {
+            ...product,
+            amount: 1,
+            rating: {
+              rate: product.rating.rate,
+              count: (product.rating.count -= 1),
+            },
+          },
+        ];
+      });
+    } else {
+      const newlyOutOfStock = { [product.id]: true };
+      setOutOfStockItems((prev) => ({
+        ...prev,
+        ...newlyOutOfStock,
+      }));
+    }
   };
 
   const removeFromCart = (product: Product) => {
     if (product.amount && product.amount - 1 > 0) {
+      if (outOfStockItems.hasOwnProperty(product.id)) {
+        const newlyInStock = { [product.id]: false };
+
+        setOutOfStockItems((prev) => ({
+          ...prev,
+          ...newlyInStock,
+        }));
+      }
+
       setCart((prev) => {
         const updatedCartItems = prev.map((cartItem) => {
           if (cartItem.id === product.id && cartItem.amount) {
-            return { ...cartItem, amount: (cartItem.amount -= 1) };
+            return {
+              ...cartItem,
+              amount: (cartItem.amount -= 1),
+              rating: {
+                rate: product.rating.rate,
+                count: (product.rating.count += 1),
+              },
+            };
           } else {
             return cartItem;
           }
@@ -126,6 +172,8 @@ const Context: React.FC<ContextProps> = (props) => {
 
   const { totalItems, grandTotal } = totals;
 
+  console.log({ cart });
+
   return (
     <Cart.Provider
       value={{
@@ -136,6 +184,7 @@ const Context: React.FC<ContextProps> = (props) => {
         totalItems,
         grandTotal,
         productRatings: ratings,
+        outOfStockItems,
         loading,
         error,
       }}
